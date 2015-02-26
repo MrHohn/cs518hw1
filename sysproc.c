@@ -115,8 +115,8 @@ sys_regis(void)
   argint(1, &handler);
   cprintf("signum = %d\n", signum);
   cprintf("handler = %d\n", handler);
-  proc->signum = signum;
-  proc->handler = handler;
+  // proc->signum = signum;
+  proc->handler[signum] = handler;
   proc->fakeebp = proc->tf->ebp;
   proc->fakeesp = proc->tf->esp;
   // uint ebp = proc->tf->ebp;
