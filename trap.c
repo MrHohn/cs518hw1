@@ -210,9 +210,11 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_DIVIDE:
-    if(proc->record == 1)
+    if(proc->signum== 23)
     {
-      cprintf("trapno is T_DIVIDE = 0, stop killing the proc, return to self-handler\n");
+      cprintf("trapno is T_DIVIDE = 0\n");
+      cprintf("exception for this trapno is on\n");
+      cprintf("stop killing the proc, return to self-handler\n");
       tf->eip = proc->handler;
       tf->ebp = proc->fakeebp;
       tf->esp = proc->fakeesp;

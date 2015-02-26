@@ -108,7 +108,7 @@ sys_regis(void)
 {
   cprintf("successfully calling the new syscall\n");
   cprintf("do the registration for the current process\n");
-  proc->record = 1;
+  // proc->record = 1;
 
   int signum, handler;
   argint(0, &signum);
