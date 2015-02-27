@@ -116,7 +116,15 @@ sys_signal(void)
   // cprintf("signum = %d\n", signum);
   // cprintf("handler = %d\n", handler);
   // proc->signum = signum;
-  proc->handler[signum] = handler;
+  if(signum == -1)
+  {
+    // cprintf("signum = -1\n");
+    proc->handler[255] = handler;    
+  }
+  else
+  {
+    proc->handler[signum] = handler;
+  }
   // proc->fakeebp = proc->tf->ebp;
   // proc->fakeesp = proc->tf->esp;
   // uint ebp = proc->tf->ebp;

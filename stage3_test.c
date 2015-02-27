@@ -5,17 +5,13 @@
 // You must implement your restorer function in restorer.h
 #include "restorer.h"
 
-void handle_signal(int signum)
-{
-    __asm__ ("movl $0x0,%ecx\n\t");
-	// Add your code to skip the return ip here
-} 
+void handle_signal(int);
 
 int main(void)
 {
     register int ecx asm ("%ecx");
-    
-    signal(-1, (sighandler_t) restorer);   // save the address of restorer function inside the kernel.
+    // restorer();
+    signal(-1, (sighandler_t*) restorer);   // save the address of restorer function inside the kernel.
     signal(SIGFPE, handle_signal);         // register the actual signal for divide by zero.
 
     int x = 5;
@@ -31,3 +27,13 @@ int main(void)
 
     exit();
 }
+
+void handle_signal(int signum)
+{
+    printf(1, "in handler\n");
+    // exit();
+
+    __asm__ ("movl $0x0,%ecx\n\t");
+	// Add your code to skip the return ip here
+    __asm__ ("movl $0x76,4(%ebp)\n\t");
+} 
