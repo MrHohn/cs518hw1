@@ -69,8 +69,8 @@ struct proc {
   // int record;                  // Record for registration
   // int signum;
   int handler[256];
-  uint fakeebp;
-  uint fakeesp;
+  // uint fakeebp;
+  // uint fakeesp;
 };
 
 // Process memory is laid out contiguously, low addresses first:

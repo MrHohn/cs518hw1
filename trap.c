@@ -216,10 +216,18 @@ trap(struct trapframe *tf)
       cprintf("trapno is T_DIVIDE = 0\n");
       cprintf("exception for this trapno is on\n");
       cprintf("stop killing the proc, return to self-handler\n");
-      // tf->eip = proc->handler[proc->signum];
+
+      cprintf("tf->esp = %d\n", tf->esp);
+      *((int *)(tf->esp + 4)) = 23;
       tf->eip = proc->handler[23];
-      tf->ebp = proc->fakeebp;
-      tf->esp = proc->fakeesp;
+
+
+      // tf->eip = proc->handler[proc->signum];
+      // tf->ebp = proc->fakeebp;
+      // tf->esp = proc->fakeesp;
+
+
+
       // int *num = (int *)(tf->ebp + 0x08);
       // uint ebp = tf->ebp;
       // uint esp = tf->esp;

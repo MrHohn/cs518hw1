@@ -117,8 +117,8 @@ sys_regis(void)
   cprintf("handler = %d\n", handler);
   // proc->signum = signum;
   proc->handler[signum] = handler;
-  proc->fakeebp = proc->tf->ebp;
-  proc->fakeesp = proc->tf->esp;
+  // proc->fakeebp = proc->tf->ebp;
+  // proc->fakeesp = proc->tf->esp;
   // uint ebp = proc->tf->ebp;
   // uint esp = proc->tf->esp;
   // ushort ss = proc->tf->ss;
