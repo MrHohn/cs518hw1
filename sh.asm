@@ -2099,7 +2099,7 @@ SYSCALL(halt)
     1005:	cd 40                	int    $0x40
     1007:	c3                   	ret    
 
-00001008 <regis>:
+00001008 <signal>:
     1008:	b8 17 00 00 00       	mov    $0x17,%eax
     100d:	cd 40                	int    $0x40
     100f:	c3                   	ret    

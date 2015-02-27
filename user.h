@@ -24,7 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int halt(void);
-int regis(int, void*);
+int signal(int, void*);
 // int regis(int);
 
 // ulib.c

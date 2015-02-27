@@ -38,9 +38,9 @@
 00000624 chdir
 000005ec exec
 000005bc wait
+0000065c signal
 000005cc read
 00000604 unlink
-0000065c regis
 000005ac fork
 0000063c sbrk
 0000064c uptime

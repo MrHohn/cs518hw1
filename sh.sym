@@ -52,10 +52,10 @@
 00000f98 exec
 00000f68 wait
 00001a22 symbols
+00001008 signal
 00000f78 read
 00000ad2 parseexec
 00000fb0 unlink
-00001008 regis
 0000035a panic
 00000f58 fork
 00000fe8 sbrk

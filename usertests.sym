@@ -60,10 +60,10 @@
 00003efc exec
 00003ecc wait
 00003b2d rand
+00003f6c signal
 00003edc read
 00000b5f preempt
 00003f14 unlink
-00003f6c regis
 00000d36 mem
 00003ebc fork
 00003f4c sbrk

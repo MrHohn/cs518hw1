@@ -10751,7 +10751,7 @@ argstr(int n, char **pp)
 801054e4:	c3                   	ret    
 
 801054e5 <syscall>:
-[SYS_regis]   sys_regis
+[SYS_signal]   sys_signal
 };
 
 void
@@ -12632,10 +12632,10 @@ sys_halt(void)
 801064bc:	c9                   	leave  
 801064bd:	c3                   	ret    
 
-801064be <sys_regis>:
+801064be <sys_signal>:
 
 int
-sys_regis(void)
+sys_signal(void)
 {
 801064be:	55                   	push   %ebp
 801064bf:	89 e5                	mov    %esp,%ebp
@@ -12669,10 +12669,11 @@ sys_regis(void)
   // cprintf("sig ebp = %d\n", ebp);
   // cprintf("sig esp = %d\n", esp);
   // cprintf("sig ss = %d\n", ss);
-  return 0;
-801064fd:	b8 00 00 00 00       	mov    $0x0,%eax
-80106502:	c9                   	leave  
-80106503:	c3                   	ret    
+  return (int)(handler);
+801064fd:	8b 45 f0             	mov    -0x10(%ebp),%eax
+80106500:	c9                   	leave  
+80106501:	c3                   	ret    
+	...
 
 80106504 <outb>:
                "memory", "cc");

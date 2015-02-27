@@ -9,7 +9,7 @@
 
 
 typedef void(sighandler_t)(int);
-int signal(int signum, sighandler_t handler);
+// int signal(int signum, sighandler_t handler);
 
 
 

@@ -104,7 +104,7 @@ sys_halt(void)
 }
 
 int
-sys_regis(void)
+sys_signal(void)
 {
   // cprintf("successfully calling the new syscall\n");
   // cprintf("do the registration for the current process\n");
@@ -125,5 +125,5 @@ sys_regis(void)
   // cprintf("sig ebp = %d\n", ebp);
   // cprintf("sig esp = %d\n", esp);
   // cprintf("sig ss = %d\n", ss);
-  return 0;
+  return (int)(handler);
 }

@@ -225,8 +225,8 @@
 801074ee vector217
 80105380 fetchint
 80107cdd setupkvm
+801064be sys_signal
 80105218 memcpy
-801064be sys_regis
 80108245 freevm
 80106c59 vector1
 8010731a vector178
