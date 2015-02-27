@@ -91,8 +91,9 @@ trap(struct trapframe *tf)
 
 
 
-
-      *((int *)(tf->esp)) = 0;
+      cprintf("tf->ecx = %d\n", tf->ecx);
+      *((int *)(tf->esp)) = SIGFPE;
+      *((int *)(tf->esp + 4)) = tf->ecx; // modified this for stage3
       tf->esp -= 4;
       // *((int *)(tf->esp)) = tf->eip; // this should be in stage2
       *((int *)(tf->esp)) = proc->handler[255]; //modified this for stage3      
