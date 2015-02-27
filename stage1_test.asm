@@ -50,7 +50,7 @@ void handle_signal(int signum)
   32:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
   39:	e8 79 04 00 00       	call   4b7 <printf>
 	if (signum == SIGFPE)
-  3e:	83 7d 08 17          	cmpl   $0x17,0x8(%ebp)
+  3e:	83 7d 08 00          	cmpl   $0x0,0x8(%ebp)
   42:	75 16                	jne    5a <handle_signal+0x3d>
 		printf(1, "TEST PASSED\n");
   44:	c7 44 24 04 91 08 00 	movl   $0x891,0x4(%esp)
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	signal(SIGFPE, handle_signal);
   8c:	c7 44 24 04 1d 00 00 	movl   $0x1d,0x4(%esp)
   93:	00 
-  94:	c7 04 24 17 00 00 00 	movl   $0x17,(%esp)
+  94:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
   9b:	e8 60 ff ff ff       	call   0 <signal>
 	// asm
 	// (

@@ -2,7 +2,7 @@
 #include "stat.h"
 #include "user.h"
 #include "signal.h"
-// static int count = 10000;
+static int count = 100000;
 
 int signal(int signum, sighandler_t handler)
 {
@@ -13,34 +13,38 @@ int signal(int signum, sighandler_t handler)
 
 void handle_signal(int signum)
 {
-	printf(1, "inside self handler\n");
-	printf(1, "modify the return address\n");
-
-	__asm__ ("movl $0x92,4(%ebp)\n\t");
-	// exit();
+	// printf(1, "inside self handler\n");
+	// printf(1, "modify the return address\n");
+	// printf(1, "count = %d\n", count);
+	--count;
+	if(!count)
+	{
+		__asm__ ("movl $0x8f,4(%ebp)\n\t");
+	}
 }
 
 int main(int argc, char *argv[])
 {
 	int x = 5;
 	int y = 0;
-	// int begin, end;
-	// int counts = count;
+	int begin, end;
+	int counts = count;
+
+	// printf(1, "anything\n");
 
 	signal(SIGFPE, handle_signal);
-	// begin = uptime();
-	// while(count--){
-	x = x / y;
-	// }
-	// end = uptime();
-	
-	printf(1, "Traps Performed: XXXX\n");
-	printf(1, "Total Elapsed Time: XXXX\n");
-	printf(1, "Average Time Per Trap: XXXXX\n");
 
-	// printf(1, "Traps Performed: %d\n", counts);
-	// printf(1, "Total Elapsed Time: %d\n", end - begin);
-	// printf(1, "Average Time Per Trap: %d\n", (end - begin) / counts);
+	// printf(1, "anything\n");
+	
+	begin = uptime();
+	// printf(1, "The clock cycle now is: %d\n", begin);	
+	x = x / y;
+	end = uptime();
+
+	// printf(1, "The clock cycle now is: %d\n", end);	
+	printf(1, "Traps Performed: %d\n", counts);
+	printf(1, "Total Elapsed Time: %d\n", (end - begin));
+	printf(1, "Average Time Per Trap: %d\n", (end - begin) / counts);
 
 	exit();
 }
