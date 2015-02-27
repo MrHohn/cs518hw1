@@ -3,6 +3,7 @@
 #include "user.h"
 #include "signal.h"
 static int count = 100000;
+static double CPU = 2.3; // this parameter should be modified for specific computer
 
 // int signal(int signum, sighandler_t handler)
 // {
@@ -31,11 +32,17 @@ int main(int argc, char *argv[])
 	// printf(1, "The clock cycle now is: %d\n", begin);	
 	x = x / y;
 	end = uptime();
-
-	// printf(1, "The clock cycle now is: %d\n", end);	
+	// double dtotal = double(end - begin) * 4348 * 1000; 
+	double dtotal = (double)(end - begin) * 10000 / CPU; 
+	//time per timer IRQ = (10000000 / 2.3Ghz)s
+	//                   = (10 / 2.3) ms
+	//                   = (10000 / 2.3) us
+	//                   = (10000000 / 2.3) ns
+	// printf(1, "The clock cycle now is: %d\n", end);
+	int total = (int)dtotal;
 	printf(1, "Traps Performed: %d times\n", counts);
-	printf(1, "Total Elapsed Time: %d us\n", (end - begin) * 4348);
-	printf(1, "Average Time Per Trap: %d us\n", (end - begin) / counts);
+	printf(1, "Total Elapsed Time: %d us\n", total);
+	printf(1, "Average Time Per Trap: %d ns\n", total * 1000 / counts);
 
 	exit();
 }
