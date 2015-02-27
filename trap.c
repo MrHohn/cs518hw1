@@ -217,8 +217,11 @@ trap(struct trapframe *tf)
       cprintf("exception for this trapno is on\n");
       cprintf("stop killing the proc, return to self-handler\n");
 
-      cprintf("tf->esp = %d\n", tf->esp);
-      *((int *)(tf->esp + 4)) = 0;
+      // cprintf("tf->esp = %d\n", tf->esp);
+      // *((int *)(tf->esp + 4)) = 0;
+      *((int *)(tf->esp)) = 0;
+      // *((int *)(tf->esp - 4)) = 0x8b;
+      tf->esp -= 4;
       tf->eip = proc->handler[0];
 
 
