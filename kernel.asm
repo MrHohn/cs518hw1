@@ -13031,7 +13031,7 @@ trap(struct trapframe *tf)
 801067dc:	8b 40 30             	mov    0x30(%eax),%eax
 801067df:	83 f8 3f             	cmp    $0x3f,%eax
 801067e2:	0f 87 36 01 00 00    	ja     8010691e <trap+0x197>
-801067e8:	8b 04 85 a8 8a 10 80 	mov    -0x7fef7558(,%eax,4),%eax
+801067e8:	8b 04 85 98 8a 10 80 	mov    -0x7fef7568(,%eax,4),%eax
 801067ef:	ff e0                	jmp    *%eax
   case T_IRQ0 + IRQ_TIMER:
     if(cpu->id == 0){
@@ -13130,32 +13130,36 @@ trap(struct trapframe *tf)
 801068aa:	8b 40 7c             	mov    0x7c(%eax),%eax
 801068ad:	85 c0                	test   %eax,%eax
 801068af:	74 6d                	je     8010691e <trap+0x197>
-      // cprintf("tf->esp = %d\n", tf->esp);
-      // *((int *)(tf->esp + 4)) = 0;
 
 
-
-      cprintf("tf->ecx = %d\n", tf->ecx);
+      // cprintf("tf->ecx = %d\n", tf->ecx);
+      // *((int *)(tf->esp)) = SIGFPE;
+      // *((int *)(tf->esp + 4)) = tf->ecx; // modified this for stage3
+      *((int *)(tf->esp - 4)) = tf->eax;
 801068b1:	8b 45 08             	mov    0x8(%ebp),%eax
-801068b4:	8b 40 18             	mov    0x18(%eax),%eax
-801068b7:	89 44 24 04          	mov    %eax,0x4(%esp)
-801068bb:	c7 04 24 1c 8a 10 80 	movl   $0x80108a1c,(%esp)
-801068c2:	e8 da 9a ff ff       	call   801003a1 <cprintf>
-      *((int *)(tf->esp)) = SIGFPE;
-801068c7:	8b 45 08             	mov    0x8(%ebp),%eax
-801068ca:	8b 40 44             	mov    0x44(%eax),%eax
-801068cd:	c7 00 00 00 00 00    	movl   $0x0,(%eax)
-      *((int *)(tf->esp + 4)) = tf->ecx; // modified this for stage3
+801068b4:	8b 40 44             	mov    0x44(%eax),%eax
+801068b7:	83 e8 04             	sub    $0x4,%eax
+801068ba:	8b 55 08             	mov    0x8(%ebp),%edx
+801068bd:	8b 52 1c             	mov    0x1c(%edx),%edx
+801068c0:	89 10                	mov    %edx,(%eax)
+      *((int *)(tf->esp - 8)) = tf->ecx;
+801068c2:	8b 45 08             	mov    0x8(%ebp),%eax
+801068c5:	8b 40 44             	mov    0x44(%eax),%eax
+801068c8:	83 e8 08             	sub    $0x8,%eax
+801068cb:	8b 55 08             	mov    0x8(%ebp),%edx
+801068ce:	8b 52 18             	mov    0x18(%edx),%edx
+801068d1:	89 10                	mov    %edx,(%eax)
+      *((int *)(tf->esp - 12)) = tf->edx;
 801068d3:	8b 45 08             	mov    0x8(%ebp),%eax
 801068d6:	8b 40 44             	mov    0x44(%eax),%eax
-801068d9:	83 c0 04             	add    $0x4,%eax
+801068d9:	83 e8 0c             	sub    $0xc,%eax
 801068dc:	8b 55 08             	mov    0x8(%ebp),%edx
-801068df:	8b 52 18             	mov    0x18(%edx),%edx
+801068df:	8b 52 14             	mov    0x14(%edx),%edx
 801068e2:	89 10                	mov    %edx,(%eax)
-      tf->esp -= 4;
+      tf->esp -= 20;
 801068e4:	8b 45 08             	mov    0x8(%ebp),%eax
 801068e7:	8b 40 44             	mov    0x44(%eax),%eax
-801068ea:	8d 50 fc             	lea    -0x4(%eax),%edx
+801068ea:	8d 50 ec             	lea    -0x14(%eax),%edx
 801068ed:	8b 45 08             	mov    0x8(%ebp),%eax
 801068f0:	89 50 44             	mov    %edx,0x44(%eax)
       // *((int *)(tf->esp)) = tf->eip; // this should be in stage2
@@ -13226,11 +13230,11 @@ trap(struct trapframe *tf)
 8010695b:	89 5c 24 0c          	mov    %ebx,0xc(%esp)
 8010695f:	89 4c 24 08          	mov    %ecx,0x8(%esp)
 80106963:	89 54 24 04          	mov    %edx,0x4(%esp)
-80106967:	c7 04 24 2c 8a 10 80 	movl   $0x80108a2c,(%esp)
+80106967:	c7 04 24 1c 8a 10 80 	movl   $0x80108a1c,(%esp)
 8010696e:	e8 2e 9a ff ff       	call   801003a1 <cprintf>
               tf->trapno, cpu->id, tf->eip, rcr2());
       panic("trap");
-80106973:	c7 04 24 5e 8a 10 80 	movl   $0x80108a5e,(%esp)
+80106973:	c7 04 24 4e 8a 10 80 	movl   $0x80108a4e,(%esp)
 8010697a:	e8 be 9b ff ff       	call   8010053d <panic>
     }
     // In user space, assume process misbehaved.
@@ -13299,7 +13303,7 @@ trap(struct trapframe *tf)
 801069cd:	8b 55 e4             	mov    -0x1c(%ebp),%edx
 801069d0:	89 54 24 08          	mov    %edx,0x8(%esp)
 801069d4:	89 44 24 04          	mov    %eax,0x4(%esp)
-801069d8:	c7 04 24 64 8a 10 80 	movl   $0x80108a64,(%esp)
+801069d8:	c7 04 24 54 8a 10 80 	movl   $0x80108a54,(%esp)
 801069df:	e8 bd 99 ff ff       	call   801003a1 <cprintf>
             "eip 0x%x addr 0x%x--kill proc\n",
             proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip, 
@@ -13531,7 +13535,7 @@ uartinit(void)
   
   // Announce that we're here.
   for(p="xv6...\n"; *p; p++)
-80106bb0:	c7 45 f4 a8 8b 10 80 	movl   $0x80108ba8,-0xc(%ebp)
+80106bb0:	c7 45 f4 98 8b 10 80 	movl   $0x80108b98,-0xc(%ebp)
 80106bb7:	eb 15                	jmp    80106bce <uartinit+0x102>
     uartputc(*p);
 80106bb9:	8b 45 f4             	mov    -0xc(%ebp),%eax
@@ -16747,7 +16751,7 @@ mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
 80107ce1:	84 c0                	test   %al,%al
 80107ce3:	74 0c                	je     80107cf1 <mappages+0x64>
       panic("remap");
-80107ce5:	c7 04 24 b0 8b 10 80 	movl   $0x80108bb0,(%esp)
+80107ce5:	c7 04 24 a0 8b 10 80 	movl   $0x80108ba0,(%esp)
 80107cec:	e8 4c 88 ff ff       	call   8010053d <panic>
     *pte = pa | perm | PTE_P;
 80107cf1:	8b 45 18             	mov    0x18(%ebp),%eax
@@ -16819,7 +16823,7 @@ setupkvm(void)
 80107d67:	3d 00 00 00 fe       	cmp    $0xfe000000,%eax
 80107d6c:	76 0c                	jbe    80107d7a <setupkvm+0x59>
     panic("PHYSTOP too high");
-80107d6e:	c7 04 24 b6 8b 10 80 	movl   $0x80108bb6,(%esp)
+80107d6e:	c7 04 24 a6 8b 10 80 	movl   $0x80108ba6,(%esp)
 80107d75:	e8 c3 87 ff ff       	call   8010053d <panic>
   for(k = kmap; k < &kmap[NELEM(kmap)]; k++)
 80107d7a:	c7 45 f4 a0 b4 10 80 	movl   $0x8010b4a0,-0xc(%ebp)
@@ -17002,7 +17006,7 @@ switchuvm(struct proc *p)
 80107f48:	85 c0                	test   %eax,%eax
 80107f4a:	75 0c                	jne    80107f58 <switchuvm+0x146>
     panic("switchuvm: no pgdir");
-80107f4c:	c7 04 24 c7 8b 10 80 	movl   $0x80108bc7,(%esp)
+80107f4c:	c7 04 24 b7 8b 10 80 	movl   $0x80108bb7,(%esp)
 80107f53:	e8 e5 85 ff ff       	call   8010053d <panic>
   lcr3(v2p(p->pgdir));  // switch to new address space
 80107f58:	8b 45 08             	mov    0x8(%ebp),%eax
@@ -17035,7 +17039,7 @@ inituvm(pde_t *pgdir, char *init, uint sz)
 80107f7f:	81 7d 10 ff 0f 00 00 	cmpl   $0xfff,0x10(%ebp)
 80107f86:	76 0c                	jbe    80107f94 <inituvm+0x1b>
     panic("inituvm: more than a page");
-80107f88:	c7 04 24 db 8b 10 80 	movl   $0x80108bdb,(%esp)
+80107f88:	c7 04 24 cb 8b 10 80 	movl   $0x80108bcb,(%esp)
 80107f8f:	e8 a9 85 ff ff       	call   8010053d <panic>
   mem = kalloc();
 80107f94:	e8 72 ab ff ff       	call   80102b0b <kalloc>
@@ -17094,7 +17098,7 @@ loaduvm(pde_t *pgdir, char *addr, struct inode *ip, uint offset, uint sz)
 80108013:	85 c0                	test   %eax,%eax
 80108015:	74 0c                	je     80108023 <loaduvm+0x1f>
     panic("loaduvm: addr must be page aligned");
-80108017:	c7 04 24 f8 8b 10 80 	movl   $0x80108bf8,(%esp)
+80108017:	c7 04 24 e8 8b 10 80 	movl   $0x80108be8,(%esp)
 8010801e:	e8 1a 85 ff ff       	call   8010053d <panic>
   for(i = 0; i < sz; i += PGSIZE){
 80108023:	c7 45 f4 00 00 00 00 	movl   $0x0,-0xc(%ebp)
@@ -17113,7 +17117,7 @@ loaduvm(pde_t *pgdir, char *addr, struct inode *ip, uint offset, uint sz)
 80108051:	83 7d ec 00          	cmpl   $0x0,-0x14(%ebp)
 80108055:	75 0c                	jne    80108063 <loaduvm+0x5f>
       panic("loaduvm: address should exist");
-80108057:	c7 04 24 1b 8c 10 80 	movl   $0x80108c1b,(%esp)
+80108057:	c7 04 24 0b 8c 10 80 	movl   $0x80108c0b,(%esp)
 8010805e:	e8 da 84 ff ff       	call   8010053d <panic>
     pa = PTE_ADDR(*pte);
 80108063:	8b 45 ec             	mov    -0x14(%ebp),%eax
@@ -17223,7 +17227,7 @@ allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
 80108137:	83 7d f0 00          	cmpl   $0x0,-0x10(%ebp)
 8010813b:	75 2c                	jne    80108169 <allocuvm+0x76>
       cprintf("allocuvm out of memory\n");
-8010813d:	c7 04 24 39 8c 10 80 	movl   $0x80108c39,(%esp)
+8010813d:	c7 04 24 29 8c 10 80 	movl   $0x80108c29,(%esp)
 80108144:	e8 58 82 ff ff       	call   801003a1 <cprintf>
       deallocuvm(pgdir, newsz, oldsz);
 80108149:	8b 45 0c             	mov    0xc(%ebp),%eax
@@ -17338,7 +17342,7 @@ deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
 8010823d:	83 7d ec 00          	cmpl   $0x0,-0x14(%ebp)
 80108241:	75 0c                	jne    8010824f <deallocuvm+0x82>
         panic("kfree");
-80108243:	c7 04 24 51 8c 10 80 	movl   $0x80108c51,(%esp)
+80108243:	c7 04 24 41 8c 10 80 	movl   $0x80108c41,(%esp)
 8010824a:	e8 ee 82 ff ff       	call   8010053d <panic>
       char *v = p2v(pa);
 8010824f:	8b 45 ec             	mov    -0x14(%ebp),%eax
@@ -17389,7 +17393,7 @@ freevm(pde_t *pgdir)
 8010828f:	83 7d 08 00          	cmpl   $0x0,0x8(%ebp)
 80108293:	75 0c                	jne    801082a1 <freevm+0x18>
     panic("freevm: no pgdir");
-80108295:	c7 04 24 57 8c 10 80 	movl   $0x80108c57,(%esp)
+80108295:	c7 04 24 47 8c 10 80 	movl   $0x80108c47,(%esp)
 8010829c:	e8 9c 82 ff ff       	call   8010053d <panic>
   deallocuvm(pgdir, KERNBASE, 0);
 801082a1:	c7 44 24 08 00 00 00 	movl   $0x0,0x8(%esp)
@@ -17470,7 +17474,7 @@ clearpteu(pde_t *pgdir, char *uva)
 8010833a:	83 7d f4 00          	cmpl   $0x0,-0xc(%ebp)
 8010833e:	75 0c                	jne    8010834c <clearpteu+0x35>
     panic("clearpteu");
-80108340:	c7 04 24 68 8c 10 80 	movl   $0x80108c68,(%esp)
+80108340:	c7 04 24 58 8c 10 80 	movl   $0x80108c58,(%esp)
 80108347:	e8 f1 81 ff ff       	call   8010053d <panic>
   *pte &= ~PTE_U;
 8010834c:	8b 45 f4             	mov    -0xc(%ebp),%eax
@@ -17522,7 +17526,7 @@ copyuvm(pde_t *pgdir, uint sz)
 801083a5:	83 7d ec 00          	cmpl   $0x0,-0x14(%ebp)
 801083a9:	75 0c                	jne    801083b7 <copyuvm+0x5a>
       panic("copyuvm: pte should exist");
-801083ab:	c7 04 24 72 8c 10 80 	movl   $0x80108c72,(%esp)
+801083ab:	c7 04 24 62 8c 10 80 	movl   $0x80108c62,(%esp)
 801083b2:	e8 86 81 ff ff       	call   8010053d <panic>
     if(!(*pte & PTE_P))
 801083b7:	8b 45 ec             	mov    -0x14(%ebp),%eax
@@ -17531,7 +17535,7 @@ copyuvm(pde_t *pgdir, uint sz)
 801083bf:	85 c0                	test   %eax,%eax
 801083c1:	75 0c                	jne    801083cf <copyuvm+0x72>
       panic("copyuvm: page not present");
-801083c3:	c7 04 24 8c 8c 10 80 	movl   $0x80108c8c,(%esp)
+801083c3:	c7 04 24 7c 8c 10 80 	movl   $0x80108c7c,(%esp)
 801083ca:	e8 6e 81 ff ff       	call   8010053d <panic>
     pa = PTE_ADDR(*pte);
 801083cf:	8b 45 ec             	mov    -0x14(%ebp),%eax

@@ -11,7 +11,8 @@ void restorer(int unused)
     // exit();
     // __asm__ ("jmp 78 <main+0x57>\n\t");
     // __asm__ ("jmp 78\n\t");
-    __asm__ ("movl $0x66,4(%ebp)\n\t");
-    __asm__ ("movl 8(%ebp),%ecx\n\t");
-    // __asm__ ("movl $0x5,%ecx\n\t");
+    __asm__ ("movl $0x6c,4(%ebp)\n\t");
+    __asm__ ("movl 0x8(%ebp),%edx\n\t");
+    __asm__ ("movl 0xc(%ebp),%ecx\n\t");
+    __asm__ ("movl 0x10(%ebp),%eax\n\t");
 }
