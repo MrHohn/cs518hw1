@@ -88,11 +88,21 @@ trap(struct trapframe *tf)
 
       // cprintf("tf->esp = %d\n", tf->esp);
       // *((int *)(tf->esp + 4)) = 0;
+
+
+
+
       *((int *)(tf->esp)) = 0;
       tf->esp -= 4;
-      *((int *)(tf->esp)) = tf->eip;
+      // *((int *)(tf->esp)) = tf->eip; // this should be in stage2
+      *((int *)(tf->esp)) = proc->handler[255]; //modified this for stage3      
       tf->eip = proc->handler[SIGFPE];
       // tf->eip = proc->handler[255];
+
+
+
+
+
 
 
       // tf->eip = proc->handler[proc->signum];
