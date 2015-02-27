@@ -211,15 +211,15 @@ trap(struct trapframe *tf)
     break;
   case T_DIVIDE:
     // if(proc->handler[proc->signum] != 0)
-    if(proc->handler[23] != 0)
+    if(proc->handler[0] != 0)
     {
       cprintf("trapno is T_DIVIDE = 0\n");
       cprintf("exception for this trapno is on\n");
       cprintf("stop killing the proc, return to self-handler\n");
 
       cprintf("tf->esp = %d\n", tf->esp);
-      *((int *)(tf->esp + 4)) = 23;
-      tf->eip = proc->handler[23];
+      *((int *)(tf->esp + 4)) = 0;
+      tf->eip = proc->handler[0];
 
 
       // tf->eip = proc->handler[proc->signum];

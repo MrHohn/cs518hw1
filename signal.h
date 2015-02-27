@@ -1,6 +1,6 @@
 #ifndef XV6_SIGNAL
 #define XV6_SIGNAL
-#define SIGFPE   23
+#define SIGFPE   0
 // You should define anything signal related that needs to be shared between
 // kernel and userspace here
 
