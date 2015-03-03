@@ -96,7 +96,7 @@ trap(struct trapframe *tf)
 
 
 
-      *((int *)(tf->esp - 4)) = 0x76;
+      *((int *)(tf->esp - 4)) = 0x74;
       *((int *)(tf->esp - 8)) = tf->ebp;
       *((int *)(tf->esp - 12)) = tf->eax;
       *((int *)(tf->esp - 16)) = tf->ecx;

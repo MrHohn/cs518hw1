@@ -13157,11 +13157,11 @@ trap(struct trapframe *tf)
 
 
 
-      *((int *)(tf->esp - 4)) = 0x76;
+      *((int *)(tf->esp - 4)) = 0x74;
 801068de:	8b 45 08             	mov    0x8(%ebp),%eax
 801068e1:	8b 40 44             	mov    0x44(%eax),%eax
 801068e4:	83 e8 04             	sub    $0x4,%eax
-801068e7:	c7 00 76 00 00 00    	movl   $0x76,(%eax)
+801068e7:	c7 00 74 00 00 00    	movl   $0x74,(%eax)
       *((int *)(tf->esp - 8)) = tf->ebp;
 801068ed:	8b 45 08             	mov    0x8(%ebp),%eax
 801068f0:	8b 40 44             	mov    0x44(%eax),%eax

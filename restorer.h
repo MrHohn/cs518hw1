@@ -28,6 +28,6 @@ void restorer(int unused)
     __asm__ ("add $0x10,%ebp\n\t");
 
     __asm__ ("movl %ebp,%esp\n\t");
-    __asm__ ("pop %ebp\n\t");
-    __asm__ ("ret\n\t");
+    // __asm__ ("pop %ebp\n\t");
+    // __asm__ ("ret\n\t");
 }

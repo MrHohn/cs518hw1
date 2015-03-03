@@ -30,7 +30,7 @@
 00000787 malloc
 000003ac sleep
 0000032c pipe
-00000015 handle_signal
+00000013 handle_signal
 0000033c write
 00000374 fstat
 0000034c kill
@@ -45,7 +45,7 @@
 000003b4 uptime
 00000b58 __bss_start
 00000177 memset
-0000001f main
+0000001d main
 00000111 strcmp
 00000394 dup
 00000000 restorer
