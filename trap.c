@@ -82,52 +82,29 @@ trap(struct trapframe *tf)
     // if(proc->handler[proc->signum] != 0)
     if(proc->handler[SIGFPE] != -1)
     {
-      // cprintf("trapno is T_DIVIDE = 0\n");
-      // cprintf("exception for this trapno is on\n");
-      // cprintf("stop killing the proc, return to self-handler\n");
-
-      // cprintf("tf->esp = %d\n", tf->esp);
-      // *((int *)(tf->esp + 4)) = 0;
 
 
+      // // *((int *)(tf->esp)) = SIGFPE;
+      // // *((int *)(tf->esp + 4)) = tf->ecx; // modified this for stage3
+      // *((int *)(tf->esp - 4)) = tf->eax;
+      // *((int *)(tf->esp - 8)) = tf->ecx;
+      // *((int *)(tf->esp - 12)) = tf->edx;
+      // tf->esp -= 20;
+      // // *((int *)(tf->esp)) = tf->eip; // this should be in stage2
+      // *((int *)(tf->esp)) = proc->restorer; //modified this for stage3      
+      // tf->eip = proc->handler[SIGFPE];
 
-      // cprintf("tf->ecx = %d\n", tf->ecx);
-      // *((int *)(tf->esp)) = SIGFPE;
-      // *((int *)(tf->esp + 4)) = tf->ecx; // modified this for stage3
-      *((int *)(tf->esp - 4)) = tf->eax;
-      *((int *)(tf->esp - 8)) = tf->ecx;
-      *((int *)(tf->esp - 12)) = tf->edx;
-      tf->esp -= 20;
-      // *((int *)(tf->esp)) = tf->eip; // this should be in stage2
+
+
+      *((int *)(tf->esp - 4)) = 0x76;
+      *((int *)(tf->esp - 8)) = tf->ebp;
+      *((int *)(tf->esp - 12)) = tf->eax;
+      *((int *)(tf->esp - 16)) = tf->ecx;
+      *((int *)(tf->esp - 20)) = tf->edx;
+      tf->esp -= 24;
       *((int *)(tf->esp)) = proc->restorer; //modified this for stage3      
       tf->eip = proc->handler[SIGFPE];
-      // tf->eip = proc->handler[255];
 
-
-
-
-
-
-
-      // tf->eip = proc->handler[proc->signum];
-      // tf->ebp = proc->fakeebp;
-      // tf->esp = proc->fakeesp;
-
-
-
-      // int *num = (int *)(tf->ebp + 0x08);
-      // uint ebp = tf->ebp;
-      // uint esp = tf->esp;
-      // ushort ss = tf->ss;
-      // cprintf("tf ebp = %d\n", ebp);
-      // cprintf("tf esp = %d\n", esp);
-      // cprintf("tf ss = %d\n", ss);
-      // *num = 0x17;
-      // num = tf->ebp;
-      // cprintf("tf ebp = %d\n", num);
-      // cprintf("proc->record %d\n", proc->record);
-      // *num = 0x17;
-      // *(tf->esp + 0x08) = 0x17;
       break;
     }
   //PAGEBREAK: 13
