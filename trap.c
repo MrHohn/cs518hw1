@@ -101,7 +101,7 @@ trap(struct trapframe *tf)
       *((int *)(tf->esp - 16)) = tf->ecx;
       *((int *)(tf->esp - 20)) = tf->edx;
       tf->esp -= 24;
-      *((int *)(tf->esp)) = proc->restorer; //modified this for stage3      
+      *((int *)(tf->esp)) = proc->handler[256]; //modified this for stage3      
       tf->eip = proc->handler[SIGFPE];
 
       break;

@@ -108,30 +108,21 @@ sys_signal(void)
 {
   // cprintf("successfully calling the new syscall\n");
   // cprintf("do the registration for the current process\n");
-  // proc->record = 1;
 
   int signum, handler;
   argint(0, &signum);
   argint(1, &handler);
   // cprintf("signum = %d\n", signum);
   // cprintf("handler = %d\n", handler);
-  // proc->signum = signum;
   if(signum == -1)
   {
     // cprintf("signum = -1\n");
-    proc->restorer = handler;    
+    proc->handler[256] = handler;    
   }
   else
   {
     proc->handler[signum] = handler;
   }
-  // proc->fakeebp = proc->tf->ebp;
-  // proc->fakeesp = proc->tf->esp;
-  // uint ebp = proc->tf->ebp;
-  // uint esp = proc->tf->esp;
-  // ushort ss = proc->tf->ss;
-  // cprintf("sig ebp = %d\n", ebp);
-  // cprintf("sig esp = %d\n", esp);
-  // cprintf("sig ss = %d\n", ss);
+
   return (int)(handler);
 }
