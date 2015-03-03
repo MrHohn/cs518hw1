@@ -119,7 +119,7 @@ sys_signal(void)
   if(signum == -1)
   {
     // cprintf("signum = -1\n");
-    proc->handler[255] = handler;    
+    proc->restorer = handler;    
   }
   else
   {

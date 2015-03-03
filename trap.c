@@ -80,7 +80,7 @@ trap(struct trapframe *tf)
     break;
   case T_DIVIDE:
     // if(proc->handler[proc->signum] != 0)
-    if(proc->handler[SIGFPE] != 0)
+    if(proc->handler[SIGFPE] != -1)
     {
       // cprintf("trapno is T_DIVIDE = 0\n");
       // cprintf("exception for this trapno is on\n");
@@ -99,7 +99,7 @@ trap(struct trapframe *tf)
       *((int *)(tf->esp - 12)) = tf->edx;
       tf->esp -= 20;
       // *((int *)(tf->esp)) = tf->eip; // this should be in stage2
-      *((int *)(tf->esp)) = proc->handler[255]; //modified this for stage3      
+      *((int *)(tf->esp)) = proc->restorer; //modified this for stage3      
       tf->eip = proc->handler[SIGFPE];
       // tf->eip = proc->handler[255];
 

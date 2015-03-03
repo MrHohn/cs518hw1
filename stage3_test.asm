@@ -34,8 +34,8 @@ void restorer(int unused)
   15:	8b 4d 04             	mov    0x4(%ebp),%ecx
     __asm__ ("add $0xc,%ebp\n\t");
   18:	83 c5 0c             	add    $0xc,%ebp
-    __asm__ ("movl $0x7f,4(%ebp)\n\t");
-  1b:	c7 45 04 7f 00 00 00 	movl   $0x7f,0x4(%ebp)
+    __asm__ ("movl $0x89,4(%ebp)\n\t");
+  1b:	c7 45 04 89 00 00 00 	movl   $0x89,0x4(%ebp)
 
     __asm__ ("movl %ebp,%esp\n\t");
   22:	89 ec                	mov    %ebp,%esp
@@ -50,86 +50,86 @@ void restorer(int unused)
   26:	5d                   	pop    %ebp
   27:	c3                   	ret    
 
-00000028 <main>:
+00000028 <handle_signal>:
+
+// You must implement your restorer function in restorer.h
 #include "restorer.h"
-
-void handle_signal(int);
-
-int main(void)
-{
-  28:	55                   	push   %ebp
-  29:	89 e5                	mov    %esp,%ebp
-  2b:	83 e4 f0             	and    $0xfffffff0,%esp
-  2e:	83 ec 20             	sub    $0x20,%esp
-    register int ecx asm ("%ecx");
-    // restorer();
-    signal(-1, (sighandler_t*) restorer);   // save the address of restorer function inside the kernel.
-  31:	c7 44 24 04 00 00 00 	movl   $0x0,0x4(%esp)
-  38:	00 
-  39:	c7 04 24 ff ff ff ff 	movl   $0xffffffff,(%esp)
-  40:	e8 93 03 00 00       	call   3d8 <signal>
-    signal(SIGFPE, handle_signal);         // register the actual signal for divide by zero.
-  45:	c7 44 24 04 c1 00 00 	movl   $0xc1,0x4(%esp)
-  4c:	00 
-  4d:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
-  54:	e8 7f 03 00 00       	call   3d8 <signal>
-
-    int x = 5;
-  59:	c7 44 24 1c 05 00 00 	movl   $0x5,0x1c(%esp)
-  60:	00 
-    int y = 0;
-  61:	c7 44 24 18 00 00 00 	movl   $0x0,0x18(%esp)
-  68:	00 
-
-    ecx = 5;
-  69:	b9 05 00 00 00       	mov    $0x5,%ecx
-    x = x / y;
-  6e:	8b 44 24 1c          	mov    0x1c(%esp),%eax
-  72:	89 c2                	mov    %eax,%edx
-  74:	c1 fa 1f             	sar    $0x1f,%edx
-  77:	f7 7c 24 18          	idivl  0x18(%esp)
-  7b:	89 44 24 1c          	mov    %eax,0x1c(%esp)
-
-    if (ecx == 5)
-  7f:	89 c8                	mov    %ecx,%eax
-  81:	83 f8 05             	cmp    $0x5,%eax
-  84:	75 1c                	jne    a2 <main+0x7a>
-        printf(1, "TEST PASSED: Final value of ecx is %d...\n", ecx);
-  86:	89 c8                	mov    %ecx,%eax
-  88:	89 44 24 08          	mov    %eax,0x8(%esp)
-  8c:	c7 44 24 04 7c 08 00 	movl   $0x87c,0x4(%esp)
-  93:	00 
-  94:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  9b:	e8 17 04 00 00       	call   4b7 <printf>
-  a0:	eb 1a                	jmp    bc <main+0x94>
-    else
-        printf(1, "TEST FAILED: Final value of ecx is %d...\n", ecx);
-  a2:	89 c8                	mov    %ecx,%eax
-  a4:	89 44 24 08          	mov    %eax,0x8(%esp)
-  a8:	c7 44 24 04 a8 08 00 	movl   $0x8a8,0x4(%esp)
-  af:	00 
-  b0:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  b7:	e8 fb 03 00 00       	call   4b7 <printf>
-
-    exit();
-  bc:	e8 6f 02 00 00       	call   330 <exit>
-
-000000c1 <handle_signal>:
-}
 
 void handle_signal(int signum)
 {
-  c1:	55                   	push   %ebp
-  c2:	89 e5                	mov    %esp,%ebp
+  28:	55                   	push   %ebp
+  29:	89 e5                	mov    %esp,%ebp
     // printf(1, "in handler\n");
     // exit();
 
     __asm__ ("movl $0x0,%ecx\n\t");
-  c4:	b9 00 00 00 00       	mov    $0x0,%ecx
+  2b:	b9 00 00 00 00       	mov    $0x0,%ecx
 	// Add your code to skip the return ip here
     // __asm__ ("movl $0x0,4(%ebp)\n\t");
-  c9:	5d                   	pop    %ebp
-  ca:	c3                   	ret    
+} 
+  30:	5d                   	pop    %ebp
+  31:	c3                   	ret    
+
+00000032 <main>:
+
+int main(void)
+{
+  32:	55                   	push   %ebp
+  33:	89 e5                	mov    %esp,%ebp
+  35:	83 e4 f0             	and    $0xfffffff0,%esp
+  38:	83 ec 20             	sub    $0x20,%esp
+    register int ecx asm ("%ecx");
+    // restorer();
+    signal(-1, (sighandler_t *) restorer);   // save the address of restorer function inside the kernel.
+  3b:	c7 44 24 04 00 00 00 	movl   $0x0,0x4(%esp)
+  42:	00 
+  43:	c7 04 24 ff ff ff ff 	movl   $0xffffffff,(%esp)
+  4a:	e8 89 03 00 00       	call   3d8 <signal>
+    signal(SIGFPE, handle_signal);         // register the actual signal for divide by zero.
+  4f:	c7 44 24 04 28 00 00 	movl   $0x28,0x4(%esp)
+  56:	00 
+  57:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
+  5e:	e8 75 03 00 00       	call   3d8 <signal>
+
+    int x = 5;
+  63:	c7 44 24 1c 05 00 00 	movl   $0x5,0x1c(%esp)
+  6a:	00 
+    int y = 0;
+  6b:	c7 44 24 18 00 00 00 	movl   $0x0,0x18(%esp)
+  72:	00 
+
+    ecx = 5;
+  73:	b9 05 00 00 00       	mov    $0x5,%ecx
+    x = x / y;
+  78:	8b 44 24 1c          	mov    0x1c(%esp),%eax
+  7c:	89 c2                	mov    %eax,%edx
+  7e:	c1 fa 1f             	sar    $0x1f,%edx
+  81:	f7 7c 24 18          	idivl  0x18(%esp)
+  85:	89 44 24 1c          	mov    %eax,0x1c(%esp)
+
+    if (ecx == 5)
+  89:	89 c8                	mov    %ecx,%eax
+  8b:	83 f8 05             	cmp    $0x5,%eax
+  8e:	75 1c                	jne    ac <main+0x7a>
+        printf(1, "TEST PASSED: Final value of ecx is %d...\n", ecx);
+  90:	89 c8                	mov    %ecx,%eax
+  92:	89 44 24 08          	mov    %eax,0x8(%esp)
+  96:	c7 44 24 04 7c 08 00 	movl   $0x87c,0x4(%esp)
+  9d:	00 
+  9e:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  a5:	e8 0d 04 00 00       	call   4b7 <printf>
+  aa:	eb 1a                	jmp    c6 <main+0x94>
+    else
+        printf(1, "TEST FAILED: Final value of ecx is %d...\n", ecx);
+  ac:	89 c8                	mov    %ecx,%eax
+  ae:	89 44 24 08          	mov    %eax,0x8(%esp)
+  b2:	c7 44 24 04 a8 08 00 	movl   $0x8a8,0x4(%esp)
+  b9:	00 
+  ba:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  c1:	e8 f1 03 00 00       	call   4b7 <printf>
+
+    exit();
+  c6:	e8 65 02 00 00       	call   330 <exit>
   cb:	90                   	nop
 
 000000cc <stosb>:

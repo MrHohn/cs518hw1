@@ -47,6 +47,10 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  /*initialize the entry of handler table to -1*/
+  int i;
+  for(i = 0; i < 256; ++i)
+    p->handler[i] = -1;
   release(&ptable.lock);
 
   // Allocate kernel stack.

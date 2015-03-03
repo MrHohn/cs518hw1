@@ -19,7 +19,7 @@ void restorer(int unused)
     __asm__ ("movl %ecx,0xc(%ebp)\n\t");
     __asm__ ("movl 0x4(%ebp),%ecx\n\t");
     __asm__ ("add $0xc,%ebp\n\t");
-    __asm__ ("movl $0x7f,4(%ebp)\n\t");
+    __asm__ ("movl $0x89,4(%ebp)\n\t");
 
     __asm__ ("movl %ebp,%esp\n\t");
     __asm__ ("pop %ebp\n\t");
