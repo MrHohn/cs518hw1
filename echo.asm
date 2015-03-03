@@ -595,7 +595,7 @@ SYSCALL(halt)
  371:	cd 40                	int    $0x40
  373:	c3                   	ret    
 
-00000374 <regis>:
+00000374 <signal>:
  374:	b8 17 00 00 00       	mov    $0x17,%eax
  379:	cd 40                	int    $0x40
  37b:	c3                   	ret    

@@ -104,17 +104,17 @@ sys_halt(void)
 }
 
 int
-sys_regis(void)
+sys_signal(void)
 {
-  cprintf("successfully calling the new syscall\n");
-  cprintf("do the registration for the current process\n");
+//   cprintf("successfully calling the new syscall\n");
+//   cprintf("do the registration for the current process\n");
   // proc->record = 1;
 
   int signum, handler;
   argint(0, &signum);
   argint(1, &handler);
-  cprintf("signum = %d\n", signum);
-  cprintf("handler = %d\n", handler);
+  // cprintf("signum = %d\n", signum);
+  // cprintf("handler = %d\n", handler);
   // proc->signum = signum;
   proc->handler[signum] = handler;
   // proc->fakeebp = proc->tf->ebp;

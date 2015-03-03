@@ -883,7 +883,7 @@ SYSCALL(halt)
  65d:	cd 40                	int    $0x40
  65f:	c3                   	ret    
 
-00000660 <regis>:
+00000660 <signal>:
  660:	b8 17 00 00 00       	mov    $0x17,%eax
  665:	cd 40                	int    $0x40
  667:	c3                   	ret    

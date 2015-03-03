@@ -3,45 +3,45 @@
 #include "user.h"
 #include "signal.h"
 
-int signal(int signum, sighandler_t handler)
-{
-	// int a = signum;
-	// a++;
-	// __asm__ ("movl %esp,-0xc(%ebp) \n\t");
-	// printf(1, "sig esp = %d\n", a);
-	// __asm__ ("movl %ebp,-0xc(%ebp) \n\t");
-	// printf(1, "sig ebp = %d\n", a);
-	// __asm__ ("movl %ss,-0xc(%ebp) \n\t");
-	// printf(1, "ss = %d\n", a);
+// int signal(int signum, sighandler_t handler)
+// {
+// 	// int a = signum;
+// 	// a++;
+// 	// __asm__ ("movl %esp,-0xc(%ebp) \n\t");
+// 	// printf(1, "sig esp = %d\n", a);
+// 	// __asm__ ("movl %ebp,-0xc(%ebp) \n\t");
+// 	// printf(1, "sig ebp = %d\n", a);
+// 	// __asm__ ("movl %ss,-0xc(%ebp) \n\t");
+// 	// printf(1, "ss = %d\n", a);
 
-	// sighandler_t b = handler;
-	// // b = handler;
-	// // c = b;
-	// __asm
-	// {
-	// 	movl   $0x17,%eax 
-	// 	push   %eax
-	// } 
-	// asm
-	// (
-	// 	"movl   $0x17,%eax \n\t" 
-	// 	"push   %eax \n\t"
-	// );
-	// asm
-	// (
-	// 	"movl   $0x17,0x0c(%ebp) \n\t" 
-	// 	// "movl   $0x17,0x08(%ebp) \n\t" 
-	// 	// "movl   $0x17,%eax \n\t" 
-	// );
-	// int sn = signum;
-	// sn = sn;
-	// uint hl = (uint)handler;
-	// hl = hl;
-	regis(signum, handler);
-	// regis(signum);
+// 	// sighandler_t b = handler;
+// 	// // b = handler;
+// 	// // c = b;
+// 	// __asm
+// 	// {
+// 	// 	movl   $0x17,%eax 
+// 	// 	push   %eax
+// 	// } 
+// 	// asm
+// 	// (
+// 	// 	"movl   $0x17,%eax \n\t" 
+// 	// 	"push   %eax \n\t"
+// 	// );
+// 	// asm
+// 	// (
+// 	// 	"movl   $0x17,0x0c(%ebp) \n\t" 
+// 	// 	// "movl   $0x17,0x08(%ebp) \n\t" 
+// 	// 	// "movl   $0x17,%eax \n\t" 
+// 	// );
+// 	// int sn = signum;
+// 	// sn = sn;
+// 	// uint hl = (uint)handler;
+// 	// hl = hl;
+// 	regis(signum, handler);
+// 	// regis(signum);
 	
-	return (int)(handler);
-}
+// 	return (int)(handler);
+// }
 
 
 
