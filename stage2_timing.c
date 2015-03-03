@@ -4,14 +4,17 @@
 #include "signal.h"
 static int count = 100000;
 
-// int signal(int signum, sighandler_t handler)
-// {
-// 	regis(signum, handler);
-	
-// 	return (int)(handler);
-// }
-
-void handle_signal(int);
+void handle_signal(int signum)
+{
+	// printf(1, "inside self handler\n");
+	// printf(1, "modify the return address\n");
+	// printf(1, "count = %d\n", count);
+	--count;
+	if(!count)
+	{
+		__asm__ ("movl $0x72,4(%ebp)\n\t");
+	}
+}
 
 
 int main(int argc, char *argv[])
@@ -45,16 +48,4 @@ int main(int argc, char *argv[])
 	printf(1, "Average Time Per Trap: %d ns\n", total * 1000 / counts);
 
 	exit();
-}
-
-void handle_signal(int signum)
-{
-	// printf(1, "inside self handler\n");
-	// printf(1, "modify the return address\n");
-	// printf(1, "count = %d\n", count);
-	--count;
-	if(!count)
-	{
-		__asm__ ("movl $0x50,4(%ebp)\n\t");
-	}
 }

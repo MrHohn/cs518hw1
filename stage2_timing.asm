@@ -4,117 +4,118 @@ _stage2_timing:     file format elf32-i386
 
 Disassembly of section .text:
 
-00000000 <main>:
+00000000 <handle_signal>:
+#include "user.h"
+#include "signal.h"
+static int count = 100000;
 
-void handle_signal(int);
+void handle_signal(int signum)
+{
+   0:	55                   	push   %ebp
+   1:	89 e5                	mov    %esp,%ebp
+	// printf(1, "inside self handler\n");
+	// printf(1, "modify the return address\n");
+	// printf(1, "count = %d\n", count);
+	--count;
+   3:	a1 64 0b 00 00       	mov    0xb64,%eax
+   8:	83 e8 01             	sub    $0x1,%eax
+   b:	a3 64 0b 00 00       	mov    %eax,0xb64
+	if(!count)
+  10:	a1 64 0b 00 00       	mov    0xb64,%eax
+  15:	85 c0                	test   %eax,%eax
+  17:	75 07                	jne    20 <handle_signal+0x20>
+	{
+		__asm__ ("movl $0x72,4(%ebp)\n\t");
+  19:	c7 45 04 72 00 00 00 	movl   $0x72,0x4(%ebp)
+	}
+}
+  20:	5d                   	pop    %ebp
+  21:	c3                   	ret    
+
+00000022 <main>:
 
 
 int main(int argc, char *argv[])
 {
-   0:	55                   	push   %ebp
-   1:	89 e5                	mov    %esp,%ebp
-   3:	83 e4 f0             	and    $0xfffffff0,%esp
-   6:	83 ec 30             	sub    $0x30,%esp
+  22:	55                   	push   %ebp
+  23:	89 e5                	mov    %esp,%ebp
+  25:	83 e4 f0             	and    $0xfffffff0,%esp
+  28:	83 ec 30             	sub    $0x30,%esp
 	int x = 5;
-   9:	c7 44 24 2c 05 00 00 	movl   $0x5,0x2c(%esp)
-  10:	00 
+  2b:	c7 44 24 2c 05 00 00 	movl   $0x5,0x2c(%esp)
+  32:	00 
 	int y = 0;
-  11:	c7 44 24 28 00 00 00 	movl   $0x0,0x28(%esp)
-  18:	00 
+  33:	c7 44 24 28 00 00 00 	movl   $0x0,0x28(%esp)
+  3a:	00 
 	int begin, end;
 	int counts = count;
-  19:	a1 64 0b 00 00       	mov    0xb64,%eax
-  1e:	89 44 24 24          	mov    %eax,0x24(%esp)
+  3b:	a1 64 0b 00 00       	mov    0xb64,%eax
+  40:	89 44 24 24          	mov    %eax,0x24(%esp)
 
 	// printf(1, "anything\n");
 
 	signal(SIGFPE, handle_signal);
-  22:	c7 44 24 04 d9 00 00 	movl   $0xd9,0x4(%esp)
-  29:	00 
-  2a:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
-  31:	e8 d2 03 00 00       	call   408 <signal>
+  44:	c7 44 24 04 00 00 00 	movl   $0x0,0x4(%esp)
+  4b:	00 
+  4c:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
+  53:	e8 b0 03 00 00       	call   408 <signal>
 
 	// printf(1, "anything\n");
 	
 	begin = uptime();
-  36:	e8 bd 03 00 00       	call   3f8 <uptime>
-  3b:	89 44 24 20          	mov    %eax,0x20(%esp)
+  58:	e8 9b 03 00 00       	call   3f8 <uptime>
+  5d:	89 44 24 20          	mov    %eax,0x20(%esp)
 	// printf(1, "The clock cycle now is: %d\n", begin);	
 	x = x / y;
-  3f:	8b 44 24 2c          	mov    0x2c(%esp),%eax
-  43:	89 c2                	mov    %eax,%edx
-  45:	c1 fa 1f             	sar    $0x1f,%edx
-  48:	f7 7c 24 28          	idivl  0x28(%esp)
-  4c:	89 44 24 2c          	mov    %eax,0x2c(%esp)
+  61:	8b 44 24 2c          	mov    0x2c(%esp),%eax
+  65:	89 c2                	mov    %eax,%edx
+  67:	c1 fa 1f             	sar    $0x1f,%edx
+  6a:	f7 7c 24 28          	idivl  0x28(%esp)
+  6e:	89 44 24 2c          	mov    %eax,0x2c(%esp)
 	end = uptime();
-  50:	e8 a3 03 00 00       	call   3f8 <uptime>
-  55:	89 44 24 1c          	mov    %eax,0x1c(%esp)
+  72:	e8 81 03 00 00       	call   3f8 <uptime>
+  77:	89 44 24 1c          	mov    %eax,0x1c(%esp)
 	//                   = (10 / 2.3) ms
 	//                   = (10000 / 2.3) us
 	//                   = (10000000 / 2.3) ns
 	// printf(1, "The clock cycle now is: %d\n", end);
 	// int total = (int)dtotal;
 	int total = (end - begin) * 10000;
-  59:	8b 44 24 20          	mov    0x20(%esp),%eax
-  5d:	8b 54 24 1c          	mov    0x1c(%esp),%edx
-  61:	89 d1                	mov    %edx,%ecx
-  63:	29 c1                	sub    %eax,%ecx
-  65:	89 c8                	mov    %ecx,%eax
-  67:	69 c0 10 27 00 00    	imul   $0x2710,%eax,%eax
-  6d:	89 44 24 18          	mov    %eax,0x18(%esp)
+  7b:	8b 44 24 20          	mov    0x20(%esp),%eax
+  7f:	8b 54 24 1c          	mov    0x1c(%esp),%edx
+  83:	89 d1                	mov    %edx,%ecx
+  85:	29 c1                	sub    %eax,%ecx
+  87:	89 c8                	mov    %ecx,%eax
+  89:	69 c0 10 27 00 00    	imul   $0x2710,%eax,%eax
+  8f:	89 44 24 18          	mov    %eax,0x18(%esp)
 	printf(1, "Traps Performed: %d times\n", counts);
-  71:	8b 44 24 24          	mov    0x24(%esp),%eax
-  75:	89 44 24 08          	mov    %eax,0x8(%esp)
-  79:	c7 44 24 04 ab 08 00 	movl   $0x8ab,0x4(%esp)
-  80:	00 
-  81:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  88:	e8 5a 04 00 00       	call   4e7 <printf>
+  93:	8b 44 24 24          	mov    0x24(%esp),%eax
+  97:	89 44 24 08          	mov    %eax,0x8(%esp)
+  9b:	c7 44 24 04 ab 08 00 	movl   $0x8ab,0x4(%esp)
+  a2:	00 
+  a3:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  aa:	e8 38 04 00 00       	call   4e7 <printf>
 	printf(1, "Total Elapsed Time: %d us\n", total);
-  8d:	8b 44 24 18          	mov    0x18(%esp),%eax
-  91:	89 44 24 08          	mov    %eax,0x8(%esp)
-  95:	c7 44 24 04 c6 08 00 	movl   $0x8c6,0x4(%esp)
-  9c:	00 
-  9d:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  a4:	e8 3e 04 00 00       	call   4e7 <printf>
+  af:	8b 44 24 18          	mov    0x18(%esp),%eax
+  b3:	89 44 24 08          	mov    %eax,0x8(%esp)
+  b7:	c7 44 24 04 c6 08 00 	movl   $0x8c6,0x4(%esp)
+  be:	00 
+  bf:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  c6:	e8 1c 04 00 00       	call   4e7 <printf>
 	printf(1, "Average Time Per Trap: %d ns\n", total * 1000 / counts);
-  a9:	8b 44 24 18          	mov    0x18(%esp),%eax
-  ad:	69 c0 e8 03 00 00    	imul   $0x3e8,%eax,%eax
-  b3:	89 c2                	mov    %eax,%edx
-  b5:	c1 fa 1f             	sar    $0x1f,%edx
-  b8:	f7 7c 24 24          	idivl  0x24(%esp)
-  bc:	89 44 24 08          	mov    %eax,0x8(%esp)
-  c0:	c7 44 24 04 e1 08 00 	movl   $0x8e1,0x4(%esp)
-  c7:	00 
-  c8:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  cf:	e8 13 04 00 00       	call   4e7 <printf>
+  cb:	8b 44 24 18          	mov    0x18(%esp),%eax
+  cf:	69 c0 e8 03 00 00    	imul   $0x3e8,%eax,%eax
+  d5:	89 c2                	mov    %eax,%edx
+  d7:	c1 fa 1f             	sar    $0x1f,%edx
+  da:	f7 7c 24 24          	idivl  0x24(%esp)
+  de:	89 44 24 08          	mov    %eax,0x8(%esp)
+  e2:	c7 44 24 04 e1 08 00 	movl   $0x8e1,0x4(%esp)
+  e9:	00 
+  ea:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  f1:	e8 f1 03 00 00       	call   4e7 <printf>
 
 	exit();
-  d4:	e8 87 02 00 00       	call   360 <exit>
-
-000000d9 <handle_signal>:
-}
-
-void handle_signal(int signum)
-{
-  d9:	55                   	push   %ebp
-  da:	89 e5                	mov    %esp,%ebp
-	// printf(1, "inside self handler\n");
-	// printf(1, "modify the return address\n");
-	// printf(1, "count = %d\n", count);
-	--count;
-  dc:	a1 64 0b 00 00       	mov    0xb64,%eax
-  e1:	83 e8 01             	sub    $0x1,%eax
-  e4:	a3 64 0b 00 00       	mov    %eax,0xb64
-	if(!count)
-  e9:	a1 64 0b 00 00       	mov    0xb64,%eax
-  ee:	85 c0                	test   %eax,%eax
-  f0:	75 07                	jne    f9 <handle_signal+0x20>
-	{
-		__asm__ ("movl $0x50,4(%ebp)\n\t");
-  f2:	c7 45 04 50 00 00 00 	movl   $0x50,0x4(%ebp)
-	}
-  f9:	5d                   	pop    %ebp
-  fa:	c3                   	ret    
+  f6:	e8 65 02 00 00       	call   360 <exit>
   fb:	90                   	nop
 
 000000fc <stosb>:
