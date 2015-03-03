@@ -4,89 +4,78 @@ _stage1_test:     file format elf32-i386
 
 Disassembly of section .text:
 
-00000000 <main>:
-// }
-
-void handle_signal(int);
-
-int main(int argc, char *argv[])
-{
-   0:	55                   	push   %ebp
-   1:	89 e5                	mov    %esp,%ebp
-   3:	83 e4 f0             	and    $0xfffffff0,%esp
-   6:	83 ec 20             	sub    $0x20,%esp
-	// 	mul *= 3;
-	// }
-	// end = uptime();
-	// printf(1, "time cost = %d\n", end = begin);
-	// cprintf("%d", %eax);
-	int x = 5;
-   9:	c7 44 24 1c 05 00 00 	movl   $0x5,0x1c(%esp)
-  10:	00 
-	int y = 0;
-  11:	c7 44 24 18 00 00 00 	movl   $0x0,0x18(%esp)
-  18:	00 
-	// __asm__ ("movl %ebp,0x1c(%esp) \n\t");
-	// printf(1, "main ebp = %d\n", x);
-	// __asm__ ("movl %esp,0x1c(%esp) \n\t");
-	// printf(1, "main esp = %d\n", x);
-
-	signal(SIGFPE, handle_signal);
-  19:	c7 44 24 04 57 00 00 	movl   $0x57,0x4(%esp)
-  20:	00 
-  21:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
-  28:	e8 8f 03 00 00       	call   3bc <signal>
-	// asm
-	// (
-	// 	"movl   $0x17,%eax \n\t" 
-	// 	"push   %eax \n\t"
-	// );
-	x = x / y;
-  2d:	8b 44 24 1c          	mov    0x1c(%esp),%eax
-  31:	89 c2                	mov    %eax,%edx
-  33:	c1 fa 1f             	sar    $0x1f,%edx
-  36:	f7 7c 24 18          	idivl  0x18(%esp)
-  3a:	89 44 24 1c          	mov    %eax,0x1c(%esp)
-
-	printf(1, "TEST FAILED: no signal sent.\n");
-  3e:	c7 44 24 04 60 08 00 	movl   $0x860,0x4(%esp)
-  45:	00 
-  46:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  4d:	e8 49 04 00 00       	call   49b <printf>
-	
-	exit();
-  52:	e8 bd 02 00 00       	call   314 <exit>
-
-00000057 <handle_signal>:
-}
+00000000 <handle_signal>:
+#include "stat.h"
+#include "user.h"
+#include "signal.h"
 
 void handle_signal(int signum)
 {
-  57:	55                   	push   %ebp
-  58:	89 e5                	mov    %esp,%ebp
-  5a:	83 ec 18             	sub    $0x18,%esp
+   0:	55                   	push   %ebp
+   1:	89 e5                	mov    %esp,%ebp
+   3:	83 ec 18             	sub    $0x18,%esp
 	printf(1, "Caught signal %d...\n", signum);
-  5d:	8b 45 08             	mov    0x8(%ebp),%eax
-  60:	89 44 24 08          	mov    %eax,0x8(%esp)
-  64:	c7 44 24 04 7e 08 00 	movl   $0x87e,0x4(%esp)
-  6b:	00 
-  6c:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  73:	e8 23 04 00 00       	call   49b <printf>
+   6:	8b 45 08             	mov    0x8(%ebp),%eax
+   9:	89 44 24 08          	mov    %eax,0x8(%esp)
+   d:	c7 44 24 04 60 08 00 	movl   $0x860,0x4(%esp)
+  14:	00 
+  15:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  1c:	e8 7a 04 00 00       	call   49b <printf>
 	if (signum == SIGFPE)
-  78:	83 7d 08 00          	cmpl   $0x0,0x8(%ebp)
-  7c:	75 16                	jne    94 <handle_signal+0x3d>
+  21:	83 7d 08 00          	cmpl   $0x0,0x8(%ebp)
+  25:	75 16                	jne    3d <handle_signal+0x3d>
 		printf(1, "TEST PASSED\n");
-  7e:	c7 44 24 04 93 08 00 	movl   $0x893,0x4(%esp)
-  85:	00 
-  86:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
-  8d:	e8 09 04 00 00       	call   49b <printf>
-  92:	eb 14                	jmp    a8 <handle_signal+0x51>
+  27:	c7 44 24 04 75 08 00 	movl   $0x875,0x4(%esp)
+  2e:	00 
+  2f:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  36:	e8 60 04 00 00       	call   49b <printf>
+  3b:	eb 14                	jmp    51 <handle_signal+0x51>
 	else
 		printf(1, "TEST FAILED: wrong signal sent.\n");
-  94:	c7 44 24 04 a0 08 00 	movl   $0x8a0,0x4(%esp)
+  3d:	c7 44 24 04 84 08 00 	movl   $0x884,0x4(%esp)
+  44:	00 
+  45:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
+  4c:	e8 4a 04 00 00       	call   49b <printf>
+	exit();
+  51:	e8 be 02 00 00       	call   314 <exit>
+
+00000056 <main>:
+}
+
+int main(int argc, char *argv[])
+{
+  56:	55                   	push   %ebp
+  57:	89 e5                	mov    %esp,%ebp
+  59:	83 e4 f0             	and    $0xfffffff0,%esp
+  5c:	83 ec 20             	sub    $0x20,%esp
+
+	int x = 5;
+  5f:	c7 44 24 1c 05 00 00 	movl   $0x5,0x1c(%esp)
+  66:	00 
+	int y = 0;
+  67:	c7 44 24 18 00 00 00 	movl   $0x0,0x18(%esp)
+  6e:	00 
+
+
+	signal(SIGFPE, handle_signal);
+  6f:	c7 44 24 04 00 00 00 	movl   $0x0,0x4(%esp)
+  76:	00 
+  77:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
+  7e:	e8 39 03 00 00       	call   3bc <signal>
+
+	x = x / y;
+  83:	8b 44 24 1c          	mov    0x1c(%esp),%eax
+  87:	89 c2                	mov    %eax,%edx
+  89:	c1 fa 1f             	sar    $0x1f,%edx
+  8c:	f7 7c 24 18          	idivl  0x18(%esp)
+  90:	89 44 24 1c          	mov    %eax,0x1c(%esp)
+
+	printf(1, "TEST FAILED: no signal sent.\n");
+  94:	c7 44 24 04 a5 08 00 	movl   $0x8a5,0x4(%esp)
   9b:	00 
   9c:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
   a3:	e8 f3 03 00 00       	call   49b <printf>
+	
 	exit();
   a8:	e8 67 02 00 00       	call   314 <exit>
   ad:	90                   	nop
@@ -704,7 +693,7 @@ printint(int fd, int xx, int base, int sgn)
  429:	ba 00 00 00 00       	mov    $0x0,%edx
  42e:	f7 f1                	div    %ecx
  430:	89 d0                	mov    %edx,%eax
- 432:	0f b6 90 20 0b 00 00 	movzbl 0xb20(%eax),%edx
+ 432:	0f b6 90 24 0b 00 00 	movzbl 0xb24(%eax),%edx
  439:	8d 45 dc             	lea    -0x24(%ebp),%eax
  43c:	03 45 f4             	add    -0xc(%ebp),%eax
  43f:	88 10                	mov    %dl,(%eax)
@@ -853,7 +842,7 @@ printf(int fd, char *fmt, ...)
  58d:	83 7d f4 00          	cmpl   $0x0,-0xc(%ebp)
  591:	75 27                	jne    5ba <printf+0x11f>
           s = "(null)";
- 593:	c7 45 f4 c1 08 00 00 	movl   $0x8c1,-0xc(%ebp)
+ 593:	c7 45 f4 c3 08 00 00 	movl   $0x8c3,-0xc(%ebp)
         while(*s != 0){
  59a:	eb 1e                	jmp    5ba <printf+0x11f>
           putc(fd, *s);
@@ -965,7 +954,7 @@ free(void *ap)
  659:	83 e8 08             	sub    $0x8,%eax
  65c:	89 45 f8             	mov    %eax,-0x8(%ebp)
   for(p = freep; !(bp > p && bp < p->s.ptr); p = p->s.ptr)
- 65f:	a1 3c 0b 00 00       	mov    0xb3c,%eax
+ 65f:	a1 40 0b 00 00       	mov    0xb40,%eax
  664:	89 45 fc             	mov    %eax,-0x4(%ebp)
  667:	eb 24                	jmp    68d <free+0x3d>
     if(p >= p->s.ptr && (bp > p || bp < p->s.ptr))
@@ -1058,7 +1047,7 @@ free(void *ap)
  71b:	89 10                	mov    %edx,(%eax)
   freep = p;
  71d:	8b 45 fc             	mov    -0x4(%ebp),%eax
- 720:	a3 3c 0b 00 00       	mov    %eax,0xb3c
+ 720:	a3 40 0b 00 00       	mov    %eax,0xb40
 }
  725:	c9                   	leave  
  726:	c3                   	ret    
@@ -1104,7 +1093,7 @@ morecore(uint nu)
  770:	89 04 24             	mov    %eax,(%esp)
  773:	e8 d8 fe ff ff       	call   650 <free>
   return freep;
- 778:	a1 3c 0b 00 00       	mov    0xb3c,%eax
+ 778:	a1 40 0b 00 00       	mov    0xb40,%eax
 }
  77d:	c9                   	leave  
  77e:	c3                   	ret    
@@ -1127,18 +1116,18 @@ malloc(uint nbytes)
  78e:	83 c0 01             	add    $0x1,%eax
  791:	89 45 ec             	mov    %eax,-0x14(%ebp)
   if((prevp = freep) == 0){
- 794:	a1 3c 0b 00 00       	mov    0xb3c,%eax
+ 794:	a1 40 0b 00 00       	mov    0xb40,%eax
  799:	89 45 f0             	mov    %eax,-0x10(%ebp)
  79c:	83 7d f0 00          	cmpl   $0x0,-0x10(%ebp)
  7a0:	75 23                	jne    7c5 <malloc+0x46>
     base.s.ptr = freep = prevp = &base;
- 7a2:	c7 45 f0 34 0b 00 00 	movl   $0xb34,-0x10(%ebp)
+ 7a2:	c7 45 f0 38 0b 00 00 	movl   $0xb38,-0x10(%ebp)
  7a9:	8b 45 f0             	mov    -0x10(%ebp),%eax
- 7ac:	a3 3c 0b 00 00       	mov    %eax,0xb3c
- 7b1:	a1 3c 0b 00 00       	mov    0xb3c,%eax
- 7b6:	a3 34 0b 00 00       	mov    %eax,0xb34
+ 7ac:	a3 40 0b 00 00       	mov    %eax,0xb40
+ 7b1:	a1 40 0b 00 00       	mov    0xb40,%eax
+ 7b6:	a3 38 0b 00 00       	mov    %eax,0xb38
     base.s.size = 0;
- 7bb:	c7 05 38 0b 00 00 00 	movl   $0x0,0xb38
+ 7bb:	c7 05 3c 0b 00 00 00 	movl   $0x0,0xb3c
  7c2:	00 00 00 
   }
   for(p = prevp->s.ptr; ; prevp = p, p = p->s.ptr){
@@ -1181,14 +1170,14 @@ malloc(uint nbytes)
       }
       freep = prevp;
  815:	8b 45 f0             	mov    -0x10(%ebp),%eax
- 818:	a3 3c 0b 00 00       	mov    %eax,0xb3c
+ 818:	a3 40 0b 00 00       	mov    %eax,0xb40
       return (void*)(p + 1);
  81d:	8b 45 f4             	mov    -0xc(%ebp),%eax
  820:	83 c0 08             	add    $0x8,%eax
  823:	eb 38                	jmp    85d <malloc+0xde>
     }
     if(p == freep)
- 825:	a1 3c 0b 00 00       	mov    0xb3c,%eax
+ 825:	a1 40 0b 00 00       	mov    0xb40,%eax
  82a:	39 45 f4             	cmp    %eax,-0xc(%ebp)
  82d:	75 1b                	jne    84a <malloc+0xcb>
       if((p = morecore(nunits)) == 0)

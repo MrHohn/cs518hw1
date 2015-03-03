@@ -44,7 +44,6 @@ void handle_signal(int signum)
   13:	55                   	push   %ebp
   14:	89 e5                	mov    %esp,%ebp
     // printf(1, "in handler\n");
-    // exit();
 
     __asm__ ("movl $0x0,%ecx\n\t");
   16:	b9 00 00 00 00       	mov    $0x0,%ecx
@@ -63,7 +62,7 @@ int main(void)
   20:	83 e4 f0             	and    $0xfffffff0,%esp
   23:	83 ec 20             	sub    $0x20,%esp
     register int ecx asm ("%ecx");
-    // restorer();
+
     signal(-1, (sighandler_t *) restorer);   // save the address of restorer function inside the kernel.
   26:	c7 44 24 04 00 00 00 	movl   $0x0,0x4(%esp)
   2d:	00 

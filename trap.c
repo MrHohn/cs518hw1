@@ -79,7 +79,6 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_DIVIDE:
-    // if(proc->handler[proc->signum] != 0)
     if(proc->handler[SIGFPE] != -1)
     {
 
@@ -128,20 +127,9 @@ trap(struct trapframe *tf)
   // until it gets to the regular system call return.)
   if(proc && proc->killed && (tf->cs&3) == DPL_USER)
   {
-    // cprintf("in trap's killed judging function\n");
-    // if(tf->trapno != 0)
-    // {
+
       exit(); 
-    // }
-    // else
-    // {
-    //   cprintf("trapno is 0, stop killing the proc, return to self-handler\n");
-    //   // cprintf("cs %d\n", tf->cs);
-    //   tf->eip = 0x11;
-    //   proc->killed = 0;
-    //   // tf->eax = 23;
-    //   // syscall();
-    // }
+
   }
 
   // Force process to give up CPU on clock tick.

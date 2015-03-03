@@ -13146,7 +13146,6 @@ trap(struct trapframe *tf)
     break;
 801068c7:	e9 75 01 00 00       	jmp    80106a41 <trap+0x292>
   case T_DIVIDE:
-    // if(proc->handler[proc->signum] != 0)
     if(proc->handler[SIGFPE] != -1)
 801068cc:	65 a1 04 00 00 00    	mov    %gs:0x4,%eax
 801068d2:	8b 40 7c             	mov    0x7c(%eax),%eax
@@ -13368,12 +13367,10 @@ trap(struct trapframe *tf)
 80106a65:	83 f8 03             	cmp    $0x3,%eax
 80106a68:	75 05                	jne    80106a6f <trap+0x2c0>
   {
-    // cprintf("in trap's killed judging function\n");
-    // if(tf->trapno != 0)
-    // {
+
       exit(); 
 80106a6a:	e8 61 dd ff ff       	call   801047d0 <exit>
-    // }
+
   }
 
   // Force process to give up CPU on clock tick.
