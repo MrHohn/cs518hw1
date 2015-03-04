@@ -87,17 +87,17 @@ trap(struct trapframe *tf)
       // cprintf("stop killing the proc, return to self-handler\n");
 
       //old version
-      *((int *)(tf->esp)) = SIGFPE;
-      tf->esp -= 4;
-      *((int *)(tf->esp)) = tf->eip;
-      tf->eip = proc->handler[SIGFPE];
+      // *((int *)(tf->esp)) = SIGFPE;
+      // tf->esp -= 4;
+      // *((int *)(tf->esp)) = tf->eip;
+      // tf->eip = proc->handler[SIGFPE];
 
 
       //new version
-      // tf->esp -= 8;
-      // *((int *)(tf->esp + 4)) = SIGFPE;
-      // *((int *)(tf->esp)) = tf->eip;
-      // tf->eip = proc->handler[SIGFPE];
+      *((int *)(tf->esp - 8)) = SIGFPE;
+      *((int *)(tf->esp - 4)) = tf->eip;
+      tf->esp -= 12;
+      tf->eip = proc->handler[SIGFPE];
 
       break;
     }

@@ -9,11 +9,19 @@ void handle_signal(int signum)
 	// printf(1, "inside self handler\n");
 	// printf(1, "modify the return address\n");
 	// printf(1, "count = %d\n", count);
+
 	--count;
+	
+	__asm__ ("movl 0x0(%ebp),%eax\n\t");
+	__asm__ ("movl %eax,0x8(%ebp)\n\t");
+	__asm__ ("addl $0x8,%ebp\n\t");
+
 	if(!count)
 	{
-		__asm__ ("movl $0x72,4(%ebp)\n\t");
+		__asm__ ("movl $0x7d,4(%ebp)\n\t");
 	}
+
+	__asm__ ("movl %ebp,%esp\n\t");
 }
 
 
