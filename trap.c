@@ -82,10 +82,10 @@ trap(struct trapframe *tf)
     if(proc->handler[SIGFPE] != -1)
     {
 
-      //for stage2
-      // *((int *)(tf->esp)) = SIGFPE;
-      // tf->esp -= 4;
-      // *((int *)(tf->esp)) = tf->eip;
+      //for stage2(new version)
+      // *((int *)(tf->esp - 8)) = SIGFPE;
+      // *((int *)(tf->esp - 4)) = tf->eip;
+      // tf->esp -= 12;
       // tf->eip = proc->handler[SIGFPE];
 
 
@@ -106,8 +106,9 @@ trap(struct trapframe *tf)
       *((int *)(tf->esp - 12)) = tf->eax;
       *((int *)(tf->esp - 16)) = tf->ecx;
       *((int *)(tf->esp - 20)) = tf->edx;
-      tf->esp -= 24;
-      *((int *)(tf->esp)) = proc->handler[256]; //modified this for stage3      
+      *((int *)(tf->esp - 24)) = tf->edx;
+      *((int *)(tf->esp - 28)) = proc->handler[256];
+      tf->esp -= 28;
       tf->eip = proc->handler[SIGFPE];
 
       break;
