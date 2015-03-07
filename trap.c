@@ -106,7 +106,7 @@ trap(struct trapframe *tf)
       *((int *)(tf->esp - 12)) = tf->eax;
       *((int *)(tf->esp - 16)) = tf->ecx;
       *((int *)(tf->esp - 20)) = tf->edx;
-      *((int *)(tf->esp - 24)) = tf->edx;
+      *((int *)(tf->esp - 24)) = SIGFPE;
       *((int *)(tf->esp - 28)) = proc->handler[256];
       tf->esp -= 28;
       tf->eip = proc->handler[SIGFPE];
