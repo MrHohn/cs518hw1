@@ -79,37 +79,18 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_DIVIDE:
-    if(proc->handler[SIGFPE] != -1)
+    if(proc->handler[SIGFPE] != -1) // judge whether this signal is registered
     {
 
-      //for stage2(new version)
-      // *((int *)(tf->esp - 8)) = SIGFPE;
-      // *((int *)(tf->esp - 4)) = tf->eip;
-      // tf->esp -= 12;
-      // tf->eip = proc->handler[SIGFPE];
-
-
-      // // *((int *)(tf->esp)) = SIGFPE;
-      // // *((int *)(tf->esp + 4)) = tf->ecx; // modified this for stage3
-      // *((int *)(tf->esp - 4)) = tf->eax;
-      // *((int *)(tf->esp - 8)) = tf->ecx;
-      // *((int *)(tf->esp - 12)) = tf->edx;
-      // tf->esp -= 20;
-      // // *((int *)(tf->esp)) = tf->eip; // this should be in stage2
-      // *((int *)(tf->esp)) = proc->restorer; //modified this for stage3      
-      // tf->eip = proc->handler[SIGFPE];
-
-
-      //for stage3
-      *((int *)(tf->esp - 4)) = 0x74;
-      *((int *)(tf->esp - 8)) = tf->ebp;
-      *((int *)(tf->esp - 12)) = tf->eax;
-      *((int *)(tf->esp - 16)) = tf->ecx;
-      *((int *)(tf->esp - 20)) = tf->edx;
-      *((int *)(tf->esp - 24)) = SIGFPE;
-      *((int *)(tf->esp - 28)) = proc->handler[256];
-      tf->esp -= 28;
-      tf->eip = proc->handler[SIGFPE];
+      *((int *)(tf->esp - 4)) = 0x74; // push the address of the next instruction of divide 0
+      *((int *)(tf->esp - 8)) = tf->ebp; // push user's ebp
+      *((int *)(tf->esp - 12)) = tf->eax; // push user's eax
+      *((int *)(tf->esp - 16)) = tf->ecx; // push user's ecx
+      *((int *)(tf->esp - 20)) = tf->edx; // push user's edx
+      *((int *)(tf->esp - 24)) = SIGFPE; // push signum as the input argument of handler_signal
+      *((int *)(tf->esp - 28)) = proc->handler[256]; // push the address of the handle_signal function
+      tf->esp -= 28; // modify the esp to the newest one
+      tf->eip = proc->handler[SIGFPE]; // modify the return address of the trap
 
       break;
     }

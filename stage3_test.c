@@ -7,12 +7,9 @@
 
 void handle_signal(int signum)
 {
-    // printf(1, "in handler\n");
 
     __asm__ ("movl $0x0,%ecx\n\t");
 	// Add your code to skip the return ip here
-    // __asm__ ("movl $0x0,4(%ebp)\n\t");
-    // __asm__ ("movl %ebp,%esp\n\t");
 } 
 
 int main(void)

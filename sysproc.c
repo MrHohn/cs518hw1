@@ -106,23 +106,17 @@ sys_halt(void)
 int
 sys_signal(void)
 {
-  // cprintf("successfully calling the new syscall\n");
-  // cprintf("do the registration for the current process\n");
-
   int signum, handler;
-  argint(0, &signum);
-  argint(1, &handler);
-  // cprintf("signum = %d\n", signum);
-  // cprintf("handler = %d\n", handler);
-  if(signum == -1)
+  argint(0, &signum); // get the fisrt argument
+  argint(1, &handler); // get the second argument
+  if(signum == -1) // if the signum is -1, register the restorer
   {
-    // cprintf("signum = -1\n");
     proc->handler[256] = handler;    
   }
-  else
+  else // otherwise, register the corresponding handler
   {
     proc->handler[signum] = handler;
   }
 
-  return (int)(handler);
+  return handler; // return the current address of the handler
 }
