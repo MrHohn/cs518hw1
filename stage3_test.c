@@ -10,6 +10,7 @@ void handle_signal(int signum)
 
     __asm__ ("movl $0x0,%ecx\n\t");
 	// Add your code to skip the return ip here
+    
 } 
 
 int main(void)
