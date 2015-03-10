@@ -107,9 +107,9 @@ int
 sys_signal(void)
 {
   int signum, handler;
-  argint(0, &signum);
-  argint(1, &handler);
-  proc->handler[signum] = handler;
+  argint(0, &signum); // get the fisrt argument
+  argint(1, &handler); // get the second argument
+  proc->handler[signum] = handler; // register the corresponding handler
 
-  return handler;
+  return handler; // return the current address of the handler
 }

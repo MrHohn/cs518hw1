@@ -79,12 +79,12 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_DIVIDE:
-    if(proc->handler[SIGFPE] != -1)
+    if(proc->handler[SIGFPE] != -1) // judge whether this signal is registered
     {
-      *((int *)(tf->esp - 8)) = SIGFPE;
-      *((int *)(tf->esp - 4)) = tf->eip;
-      tf->esp -= 12;
-      tf->eip = proc->handler[SIGFPE];
+      *((int *)(tf->esp - 4)) = tf->eip; // push the original return address
+      *((int *)(tf->esp - 8)) = SIGFPE;  // push signum as the input argument of handler_signal
+      tf->esp -= 12; // modified the user's esp
+      tf->eip = proc->handler[SIGFPE]; // modify the return address of the trap to the handler
 
       break;
     }
