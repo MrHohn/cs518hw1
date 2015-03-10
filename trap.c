@@ -79,37 +79,12 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_DIVIDE:
-    // if(proc->handler[proc->signum] != 0)
-    if(proc->handler[SIGFPE] != -1)
+    if(proc->handler[SIGFPE] != -1) // judge whether this signal is registered
     {
-      // cprintf("trapno is T_DIVIDE = 0\n");
-      // cprintf("exception for this trapno is on\n");
-      // cprintf("stop killing the proc, return to self-handler\n");
+      *((int *)(tf->esp - 4)) = SIGFPE; // push signum as the input argument of handler_signal
+      tf->esp -= 8; // modified the esp
+      tf->eip = proc->handler[SIGFPE]; // modify the return address of the trap
 
-      // cprintf("tf->esp = %d\n", tf->esp);
-      *((int *)(tf->esp + 4)) = SIGFPE;
-      tf->eip = proc->handler[SIGFPE];
-
-
-      // tf->eip = proc->handler[proc->signum];
-      // tf->ebp = proc->fakeebp;
-      // tf->esp = proc->fakeesp;
-
-
-
-      // int *num = (int *)(tf->ebp + 0x08);
-      // uint ebp = tf->ebp;
-      // uint esp = tf->esp;
-      // ushort ss = tf->ss;
-      // cprintf("tf ebp = %d\n", ebp);
-      // cprintf("tf esp = %d\n", esp);
-      // cprintf("tf ss = %d\n", ss);
-      // *num = 0x17;
-      // num = tf->ebp;
-      // cprintf("tf ebp = %d\n", num);
-      // cprintf("proc->record %d\n", proc->record);
-      // *num = 0x17;
-      // *(tf->esp + 0x08) = 0x17;
       break;
     }
   //PAGEBREAK: 13
@@ -133,20 +108,9 @@ trap(struct trapframe *tf)
   // until it gets to the regular system call return.)
   if(proc && proc->killed && (tf->cs&3) == DPL_USER)
   {
-    // cprintf("in trap's killed judging function\n");
-    // if(tf->trapno != 0)
-    // {
+
       exit(); 
-    // }
-    // else
-    // {
-    //   cprintf("trapno is 0, stop killing the proc, return to self-handler\n");
-    //   // cprintf("cs %d\n", tf->cs);
-    //   tf->eip = 0x11;
-    //   proc->killed = 0;
-    //   // tf->eax = 23;
-    //   // syscall();
-    // }
+
   }
 
   // Force process to give up CPU on clock tick.

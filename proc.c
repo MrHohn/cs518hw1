@@ -48,6 +48,7 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   int i;
+  /*initialize the entry of handler table to -1*/  
   for(i = 0; i < 256; ++i)
     p->handler[i] = -1;
   release(&ptable.lock);
